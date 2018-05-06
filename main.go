@@ -21,7 +21,13 @@ func main() {
 	}
 
 	app := iris.New()
-	app.RegisterView(iris.HTML("./web/views", ".html").Reload(true))
+
+	viewTmpl := iris.HTML("./web/views", ".html")
+	viewTmpl.Reload(true)
+	viewTmpl.Layout("layouts/layout.html")
+	app.RegisterView(viewTmpl)
+
+	//app.RegisterView(iris.HTML("./web/views", ".html").Reload(true))
 	app.StaticWeb("/", "./web/content")
 
 	app.OnErrorCode(iris.StatusInternalServerError, func(ctx iris.Context) {
@@ -30,7 +36,7 @@ func main() {
 			ctx.Writef("Internal server error: %s", errMsg)
 			return
 		}
-		ctx.Writef("(Unexpected) internal server error")
+		ctx.Writef("(Unexpected) internal server error: %s", errMsg)
 	})
 
 	app.Use(func(ctx iris.Context) {

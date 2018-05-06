@@ -1,34 +1,12 @@
-<html>
-
-<head>
-    <title>GoBlockDemo</title>
-    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/style.css">
-
-    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js"></script>
-    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-</head>
-
-<body>
-    <div class="alert alert-primary" role="alert">
-        This is a primary alert—check it out! ---
+ {{range $b:=.message}}
+<div class="card bg-light" style="width: 18rem;">
+    <div class="card-header">
+        Data: {{$b.Data}}
     </div>
-
-    <!-- <h1>Example heading <span class="badge badge-secondary">{{.message}}</span></h1> -->
-
-    {{range $b:=.message}}
-    <div class="card bg-light" style="width: 18rem;">
-        <div class="card-header">
-            Data: {{$b.Data}}
-        </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">Timestamp: {{$b.Data}}</li>
-            <li class="list-group-item">PrevHash: {{$b.Data}}</li>
-            <li class="list-group-item">Hash: {{$b.Data}}</li>
-        </ul>
-    </div>
-    {{end}}
-</body>
-
-</html>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">Timestamp: {{$b.Data}}</li>
+        <li class="list-group-item">PrevHash: {{$b.Data}}</li>
+        <li class="list-group-item">Hash: {{$b.Data}}</li>
+    </ul>
+</div>
+{{end}}
