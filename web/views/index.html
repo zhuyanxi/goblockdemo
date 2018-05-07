@@ -1,12 +1,14 @@
- {{range $b:=.message}}
-<div class="card bg-light" style="width: 18rem;">
-    <div class="card-header">
-        Data: {{$b.Data}}
+<div class="row">
+    {{range $b:=.message}}
+    <div class="card bg-light col" style="width: 18rem;">
+        <div class="card-header">
+            Data: {{$b.Data}}
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Timestamp: {{$b.Timestamp}}</li>
+            <li class="list-group-item">PrevHash: {{$b.PrevHash}}</li>
+            <li class="list-group-item">Hash: {{$b.Hash}}</li>
+        </ul>
     </div>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">Timestamp: {{$b.Data}}</li>
-        <li class="list-group-item">PrevHash: {{$b.Data}}</li>
-        <li class="list-group-item">Hash: {{$b.Data}}</li>
-    </ul>
+    {{end}}
 </div>
-{{end}}
