@@ -26,8 +26,6 @@ func main() {
 	viewTmpl.Reload(true)
 	viewTmpl.Layout("layouts/layout.html")
 	app.RegisterView(viewTmpl)
-
-	//app.RegisterView(iris.HTML("./web/views", ".html").Reload(true))
 	app.StaticWeb("/", "./web/content")
 
 	app.OnErrorCode(iris.StatusInternalServerError, func(ctx iris.Context) {
@@ -77,8 +75,22 @@ func main() {
 	}
 
 	app.Get("/", func(ctx iris.Context) {
-		ctx.ViewData("message", bc.Blocks)
-		ctx.View("index.html")
+		//ctx.ViewData("message", bc.Blocks)
+		ctx.View("index.html", iris.Map{
+			"blocks": bc.Blocks,
+			"active": ctx.Path(),
+		})
+	})
+
+	app.Get("/hash", func(ctx iris.Context) {
+		// ctx.ViewData("hash", iris.Map{
+		// 	"title":  "123456",
+		// 	"active": ctx.Path(),
+		// })
+		ctx.View("hash.html", iris.Map{
+			"title":  "123456",
+			"active": ctx.Path(),
+		})
 	})
 
 	// app.Get("/user/{id:long}", func(ctx iris.Context) {

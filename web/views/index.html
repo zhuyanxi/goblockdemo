@@ -1,8 +1,8 @@
 <h1>{{12.345|printf "%.2f"}}</h1>
 
 <div class="row">
-    {{range $b:=.message}}
-    <div class="card bg-light col" style="width: 18rem;">
+    {{range $b:=.blocks}}
+    <div class="card bg-light col shadow">
         <div class="card-header">
             Data: {{$b.Data}}
         </div>
