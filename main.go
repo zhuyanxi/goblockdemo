@@ -1,10 +1,10 @@
 package main
 
 import (
-	"block"
 	"fmt"
 
 	"github.com/kataras/iris"
+	"github.com/zhuyanxi/goblockdemo/block"
 )
 
 func main() {
