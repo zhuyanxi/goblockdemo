@@ -2,17 +2,32 @@
 <form>
     <!--Basic textarea-->
     <div class="md-form">
-        <textarea type="text" id="hash_hashData" class="form-control md-textarea" rows="3">{{.title}}</textarea>
+        <textarea type="text" id="hash_hashData" class="form-control md-textarea" rows="5"></textarea>
         <label for="textareaBasic">Data</label>
     </div>
 
-    <label for="materialFormContactNameEx">Hash of The Data</label>
-    <input type="text" id="hash_hashvalue" class="form-control" disabled value="{{.active}}">
+    <div class="md-form">
+        <label for="hash_hashvalue">SHA256 of The Data</label>
+        <input type="text" id="hash_hashvalue" class="form-control" disabled value="{{.hash}}">
+    </div>
 </form>
 <!-- Material form group -->
 
 <script>
     $(document).on("input propertychange", "#hash_hashData", function() {
-        $("#hash_hashvalue").val($(this).val())
+        //$("#hash_hashvalue").val($(this).val())
+        var postData = $(this).val();
+        $.ajax({
+            url: "/api/SHA256",
+            data: {
+                postData
+            },
+            method: "POST",
+            dataType: "JSON",
+            success: data => {
+                var result = data;
+                $("#hash_hashvalue").val(result);
+            }
+        })
     });
 </script>

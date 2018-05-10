@@ -1,16 +1,18 @@
 <h1>{{12.345|printf "%.2f"}}</h1>
 
-<div class="row">
+<div class="card-deck">
     {{range $b:=.blocks}}
-    <div class="card bg-light col shadow">
-        <div class="card-header">
-            Data: {{$b.Data}}
+    <div class="card md-4">
+        <div class="card-body z-depth-2">
+            <div class="card-title">
+                Data: {{$b.Data | printf "%s" }}
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Timestamp: {{ $b.Timestamp }}</li>
+                <li class="list-group-item">PrevHash: {{ $b.PrevHash | printf "%x" }}</li>
+                <li class="list-group-item">Hash: {{ $b.Hash | printf "%x" }}</li>
+            </ul>
         </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">Timestamp: {{ $b.Timestamp }}</li>
-            <li class="list-group-item">PrevHash: {{ $b.PrevHash | printf "%x" }}</li>
-            <li class="list-group-item">Hash: {{ $b.Hash | printf "%x" }}</li>
-        </ul>
     </div>
     {{end}}
 </div>

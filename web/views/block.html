@@ -1,0 +1,55 @@
+<form>
+    <div class="md-form">
+        <input type="text" id="block_height" class="form-control" disabled value="{{.block.Height}}">
+        <label for="block_height"><i class="fa fa-hashtag"></i>Height</label>
+    </div>
+    <div class="md-form">
+        <input type="text" id="block_timestamp" class="form-control" disabled value="{{.block.Timestamp}}">
+        <label for="block_timestamp">Timestamp</label>
+    </div>
+    <div class="md-form">
+        <textarea type="text" id="block_hashData" class="form-control md-textarea" rows="2">{{.block.Data | printf "%s" }}</textarea>
+        <label for="block_hashData">Data</label>
+    </div>
+    <div class="md-form">
+        <textarea type="text" id="block_prevhash" class="form-control md-textarea" disabled rows="1">{{.block.PrevHash | printf "%x" }}</textarea>
+        <label for="block_prevhash">PrevHash</label>
+    </div>
+    <div class="md-form">
+        <textarea type="text" id="block_hash" class="form-control md-textarea" disabled rows="1">{{.block.Hash | printf "%x" }}</textarea>
+        <label for="block_hash">Hash</label>
+    </div>
+
+    <div class="row">
+        <!-- Grid column -->
+        <div class="col-3">
+            <label>Select Difficulty</label>
+            <select class="mdb-select">
+                    <option value="0">0</option>
+                    <option value="00">00</option>
+                    <option value="000">000</option>
+                    <option value="0000">0000</option>
+                    <option value="00000">00000</option>
+                </select>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col">
+            <!-- Material input -->
+            <div class="md-form mt-0">
+                <input type="text" class="form-control" placeholder="Last name">
+            </div>
+        </div>
+        <!-- Grid column -->
+    </div>
+</form>
+
+<script>
+    var block_hashvalue = $("#block_hash").val();
+    if (block_hashvalue.indexOf("0000") != 0) {
+        $("#block_hash").parent().css({
+            "background-color": "#e9c769",
+        })
+    }
+</script>
