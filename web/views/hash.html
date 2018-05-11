@@ -1,17 +1,24 @@
 <!-- Material form group -->
-<form>
-    <!--Basic textarea-->
-    <div class="md-form">
-        <textarea type="text" id="hash_hashData" class="form-control md-textarea" rows="5"></textarea>
-        <label for="textareaBasic">Data</label>
-    </div>
-
-    <div class="md-form">
-        <label for="hash_hashvalue">SHA256 of The Data</label>
-        <input type="text" id="hash_hashvalue" class="form-control" disabled value="{{.hash}}">
-    </div>
-</form>
-<!-- Material form group -->
+<div class="row">
+    <form class="col s12">
+        <div class="row">
+            <div class="input-field col s12">
+                <textarea id="hash_hashData" class="materialize-textarea" rows="5"></textarea>
+                <label for="hash_hashData">Data</label>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="row">
+    <form class="col s12">
+        <div class="row">
+            <div class="input-field col s12">
+                <input disabled value="{{.hash}}" id="hash_hashvalue" type="text" class="validate">
+                <label for="hash_hashvalue">SHA256 of The Data</label>
+            </div>
+        </div>
+    </form>
+</div>
 
 <script>
     $(document).on("input propertychange", "#hash_hashData", function() {

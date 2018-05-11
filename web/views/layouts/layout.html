@@ -1,54 +1,49 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>GoBlockDemo</title>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <!-- Material Design Bootstrap -->
-    <link href="css/mdb.min.css" rel="stylesheet">
-    <!-- Your custom styles (optional) -->
-    <link href="css/custom.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.css" media="screen,projection" />
+    <!--Import custome.css-->
+    <link rel="stylesheet" href="css/custom.css">
 
-    <!-- SCRIPTS -->
-    <!-- JQuery -->
-    <script type="text/javascript" src="js/dist/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
 </head>
 
 <body>
-    <header>
-        {{ template "topnav" }}
-    </header>
-    <main class="mt-5 pt-5">
-        <div class="container">
+    <div>
+        <header>
+            {{ template "topnav" }}
+        </header>
+        <main class="mdl-layout__content">
             {{yield}}
-        </div>
-    </main>
+        </main>
+    </div>
 
-    <!-- Bootstrap tooltips -->
-    <script type="text/javascript" src="js/dist/popper.min.js"></script>
-    <!-- Bootstrap core JavaScript -->
-    <script type="text/javascript" src="js/dist/bootstrap.min.js"></script>
-    <!-- MDB core JavaScript -->
-    <script type="text/javascript" src="js/dist/mdb.min.js"></script>
 
-    <script type="text/javascript" src="js/demo.js"></script>
-    <!-- Initializations -->
+    <!--JavaScript at end of body for optimized loading-->
+    <script type="text/javascript" src="js/materialize.js"></script>
     <script type="text/javascript">
-        // Animations initialization
-        // new WOW().init();
-
-        $('.nav-link').each(function() {
+        $('.top_nav').each(function() {
             var path = $(this).attr("href");
             if (path == '{{.active}}') {
                 $(this).parent().addClass("active");
             }
         });
+        $(document).ready(function() {
+            $('select').formSelect();
+            $('.sidenav').sidenav();
+        });
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     var elems = document.querySelectorAll('select');
+        //     var instances = M.FormSelect.init(elems);
+        // });
     </script>
 </body>
 
