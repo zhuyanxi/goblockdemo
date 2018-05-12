@@ -1,6 +1,6 @@
-<h1>{{12.345|printf "%.2f"}}</h1>
+<h1>Blocks</h1>
 
-<div class="row">
+<!-- <div class="row">
     <div class="col s12 m6 l3">
         <label>Browser Select</label>
         <select class="browser-default">
@@ -19,14 +19,15 @@
             </select>
         <label>Difficulty Select</label>
     </div>
-</div>
+</div> -->
 
 <div class="row">
     {{range $b:=.blocks}}
     <div class="col s12 m6 l4">
         <div class="card cyan">
             <div class="card-content">
-                <span class="card-title">Data: {{$b.Data | printf "%s" }}</span>
+                <span class="card-title">Height:#{{$b.Height}}</span>
+                <span class="card-title">Data:{{$b.Data | printf "%s" }}</span>
                 <p>Timestamp: {{ $b.Timestamp }}</p>
                 <p>PrevHash: {{ $b.PrevHash | printf "%x" }}</p>
                 <p>Hash: {{ $b.Hash | printf "%x" }}</p>

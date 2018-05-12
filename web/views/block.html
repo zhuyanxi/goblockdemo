@@ -1,55 +1,187 @@
-<form>
-    <div class="md-form">
-        <input type="text" id="block_height" class="form-control" disabled value="{{.block.Height}}">
-        <label for="block_height"><i class="fa fa-hashtag"></i>Height</label>
-    </div>
-    <div class="md-form">
-        <input type="text" id="block_timestamp" class="form-control" disabled value="{{.block.Timestamp}}">
-        <label for="block_timestamp">Timestamp</label>
-    </div>
-    <div class="md-form">
-        <textarea type="text" id="block_hashData" class="form-control md-textarea" rows="2">{{.block.Data | printf "%s" }}</textarea>
-        <label for="block_hashData">Data</label>
-    </div>
-    <div class="md-form">
-        <textarea type="text" id="block_prevhash" class="form-control md-textarea" disabled rows="1">{{.block.PrevHash | printf "%x" }}</textarea>
-        <label for="block_prevhash">PrevHash</label>
-    </div>
-    <div class="md-form">
-        <textarea type="text" id="block_hash" class="form-control md-textarea" disabled rows="1">{{.block.Hash | printf "%x" }}</textarea>
-        <label for="block_hash">Hash</label>
-    </div>
-
-    <div class="row">
-        <!-- Grid column -->
-        <div class="col-3">
-            <label>Select Difficulty</label>
-            <select class="mdb-select">
-                    <option value="0">0</option>
-                    <option value="00">00</option>
-                    <option value="000">000</option>
-                    <option value="0000">0000</option>
-                    <option value="00000">00000</option>
-                </select>
+<div class="col s12">
+    <div class="card cyan">
+        <div class="card-content">
+            <span class="card-title">Mine</span>
+            <p>Demonstrate how to mine. Change the data will change the hash, so one must mine the block again.</p>
+            <p>The Difficulty means the hash of the data begins with the Difficulty.</p>
         </div>
-        <!-- Grid column -->
+    </div>
+</div>
 
-        <!-- Grid column -->
-        <div class="col">
-            <!-- Material input -->
-            <div class="md-form mt-0">
-                <input type="text" class="form-control" placeholder="Last name">
+<div class="col s12 m6 l4">
+    <div class="card">
+        <div class="card-content">
+            <div class="row">
+                <form class="col s12">
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input type="text" id="block_height" class="validate" disabled value="{{.block.Height}}">
+                            <label for="block_height"><i class="fa fa-hashtag"></i>Height</label>
+                        </div>
+                        <div class="input-field col s6">
+                            <input type="text" id="block_timestamp" class="validate" disabled value="{{.block.Timestamp}}">
+                            <label for="block_timestamp">Timestamp</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <textarea type="text" id="block_hashData" class="materialize-textarea" rows="2">{{ .block.Data | printf "%s" }}</textarea>
+                            <label for="block_hashData">Data</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <textarea type="text" id="block_prevhash" class="materialize-textarea" disabled rows="1">{{.block.PrevHash | printf "%x" }}</textarea>
+                            <label for="block_prevhash">PrevHash</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <textarea type="text" id="block_hash" class="materialize-textarea" disabled rows="1">{{.block.Hash | printf "%x" }}</textarea>
+                            <label for="block_hash">Hash</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input type="text" id="block_nouce" class="validate" value="{{.block.Nouce}}">
+                            <label for="block_nouce"><i class="fa fa-hashtag"></i>Nouce</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s12 m3">
+                            <label>Select Difficulty</label>
+                            <select id="mine_difficulty">
+                                <option value="0">0</option>
+                                <option value="00">00</option>
+                                <option value="000" selected>000</option>
+                                <option value="0000">0000</option>
+                            </select>
+                        </div>
+                        <div class="input-field col s12 m3">
+                            <a class="waves-effect waves-light btn" id="block_mine">mine</a>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-        <!-- Grid column -->
     </div>
-</form>
+</div>
 
 <script>
     var block_hashvalue = $("#block_hash").val();
-    if (block_hashvalue.indexOf("0000") != 0) {
-        $("#block_hash").parent().css({
-            "background-color": "#e9c769",
-        })
+    if (block_hashvalue.indexOf($("#mine_difficulty option:selected").val()) != 0) {
+        $("#block_hash").parent().addClass("cyan");
     }
+
+    var wait = 0;
+    var Height = $("#block_height").val();
+    var Timestamp = $("#block_timestamp").val();
+    var Data = $("#block_hashData").val();
+    var PrevHash = $("#block_prevhash").val();
+    var Hash = $("#block_hash").val();
+
+    function time(o) {
+        if (wait == 10000000000000) {
+            o.removeAttribute("disabled");
+            o.innerHTML = "Mine";
+            wait = 0;
+        } else {
+            $("#block_nouce").val(wait);
+            o.setAttribute("disabled", true);
+            o.innerHTML = "Mining...";
+
+            $.ajax({
+                url: "/api/MineBlock",
+                data: {
+                    Height: $("#block_height").val(),
+                    Data: $("#block_hashData").val(),
+                    PrevHash: $("#block_prevhash").val(),
+                    Nouce: $("#block_nouce").val(),
+                },
+                method: "POST",
+                dataType: "JSON",
+                success: data => {
+                    var result = data;
+                    $("#block_hash").val(result);
+                    var Difficulty = $("#mine_difficulty option:selected").val();
+                    if (result.indexOf(Difficulty) == 0) {
+                        $("#block_hash").parent().removeClass("cyan");
+                        wait = 10000000000000;
+                    } else {
+                        $("#block_hash").parent().addClass("cyan");
+                    }
+                }
+            });
+
+            wait++;
+            setTimeout(function() {
+                time(o)
+            }, 0);
+        }
+    }
+
+    $("#block_mine").on("click", function() {
+        $("#block_nouce").focus();
+        // var Difficulty = $("#mine_difficulty option:selected").val();
+        // if ($("#block_hash").val().indexOf("9") == 0) {
+        //     alert("ok");
+        // } else {
+        //     alert("bad");
+        // }
+        // $.ajax({
+        //     url: "/api/MineBlock",
+        //     data: {
+        //         Height: Height,
+        //         Data: Data,
+        //         PrevHash: PrevHash,
+        //         Nouce: 369,
+        //     },
+        //     method: "POST",
+        //     dataType: "JSON",
+        //     success: data => {
+        //         var result = data;
+        //         $("#block_hash").val(result);
+        //     }
+        // });
+        time(this);
+    })
+
+    $(document).on("input propertychange", "#block_hashData", function() {
+        //$("#hash_hashvalue").val($(this).val())
+        var postData = $(this).val();
+        $.ajax({
+            url: "/api/MineBlock",
+            data: {
+                Height: $("#block_height").val(),
+                Data: postData,
+                PrevHash: $("#block_prevhash").val(),
+                Nouce: $("#block_nouce").val(),
+            },
+            method: "POST",
+            dataType: "JSON",
+            success: data => {
+                var result = data;
+                $("#block_hash").val(result);
+                var Difficulty = $("#mine_difficulty option:selected").val();
+                if (result.indexOf(Difficulty) == 0) {
+                    $("#block_hash").parent().removeClass("cyan");
+                } else {
+                    $("#block_hash").parent().addClass("cyan");
+                }
+            }
+        });
+        // $.ajax({
+        //     url: "/api/SHA256",
+        //     data: {
+        //         postData
+        //     },
+        //     method: "POST",
+        //     dataType: "JSON",
+        //     success: data => {
+        //         var result = data;
+        //         $("#hash_hashvalue").val(result);
+        //     }
+        // })
+    });
 </script>

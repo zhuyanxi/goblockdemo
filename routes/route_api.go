@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 
 	"github.com/kataras/iris"
+	"github.com/zhuyanxi/goblockdemo/block"
 )
 
 // SHA256 :
@@ -13,5 +14,18 @@ func SHA256(ctx iris.Context) {
 	hashData := sha256.Sum256([]byte(postData))
 
 	hashStr := hex.EncodeToString(hashData[:])
+	ctx.JSON(hashStr)
+}
+
+// MineBlock : the function to solve the puzzle
+func MineBlock(ctx iris.Context) {
+	Height, _ := ctx.PostValueInt64("Height")
+	Data := ctx.PostValue("Data")
+	PrevHash := []byte(ctx.PostValue("PrevHash"))
+	Nouce, _ := ctx.PostValueInt64("Nouce")
+	block := block.NewBlock(Height, Data, PrevHash, Nouce)
+
+	hash := block.Hash[:]
+	hashStr := hex.EncodeToString(hash[:])
 	ctx.JSON(hashStr)
 }

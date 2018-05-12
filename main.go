@@ -47,6 +47,8 @@ func main() {
 	apiRoute := app.Party("/api", logThisMiddleware)
 	{
 		apiRoute.Post("/SHA256", Route.SHA256)
+		apiRoute.Post("/MineBlock", Route.MineBlock)
+		apiRoute.Post("/AddUser", AddUser)
 	}
 
 	app.Run(iris.Addr(":8080"), iris.WithCharset("UTF-8"), iris.WithoutVersionChecker)
@@ -55,4 +57,15 @@ func main() {
 func logThisMiddleware(ctx iris.Context) {
 	ctx.Application().Logger().Infof("Path:%s|IP:%s", ctx.Path(), ctx.RemoteAddr())
 	ctx.Next()
+}
+
+type User struct {
+	Id   int
+	Name string
+}
+
+func AddUser(ctx iris.Context) {
+	var user User
+	ctx.ReadJSON(&user)
+	ctx.Writef("%d %s", user.Id, user.Name)
 }
