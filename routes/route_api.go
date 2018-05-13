@@ -17,13 +17,17 @@ func SHA256(ctx iris.Context) {
 	ctx.JSON(hashStr)
 }
 
+func ComputeBlockHash(ctx iris.Context) {
+
+}
+
 // MineBlock : the function to solve the puzzle
 func MineBlock(ctx iris.Context) {
 	Height, _ := ctx.PostValueInt64("Height")
 	Data := ctx.PostValue("Data")
 	PrevHash := []byte(ctx.PostValue("PrevHash"))
-	Nouce, _ := ctx.PostValueInt64("Nouce")
-	block := block.NewBlock(Height, Data, PrevHash, Nouce)
+	//Nouce, _ := ctx.PostValueInt64("Nouce")
+	block := block.NewBlock(Height, Data, PrevHash)
 
 	hash := block.Hash[:]
 	hashStr := hex.EncodeToString(hash[:])

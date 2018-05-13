@@ -13,9 +13,9 @@ import (
 func Index(ctx iris.Context) {
 	bc := block.NewBlockchain()
 	Util.RandSleep()
-	bc.AddBlock("Send 1 btc to Alice", 1)
+	bc.AddBlock("Send 1 btc to Alice")
 	Util.RandSleep()
-	bc.AddBlock("Send 1.1 btc to Bob", 2)
+	bc.AddBlock("Send 1.1 btc to Bob")
 
 	ctx.View("index.html", iris.Map{
 		"blocks": bc.Blocks,
@@ -35,9 +35,9 @@ func Hash(ctx iris.Context) {
 // Block :
 func Block(ctx iris.Context) {
 	bc := block.NewBlockchain()
-	bc.AddBlock("Send 1 btc to Alice", 1)
+	bc.AddBlock("Send 1 btc to Alice")
 	ctx.View("block.html", iris.Map{
-		"block":  bc.Blocks[0],
+		"block":  bc.Blocks[1],
 		"active": ctx.Path(),
 	})
 }

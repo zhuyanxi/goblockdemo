@@ -1,4 +1,4 @@
-<h1>Blocks</h1>
+<h1>Blockchain</h1>
 
 <!-- <div class="row">
     <div class="col s12 m6 l3">
@@ -23,7 +23,7 @@
 
 <div class="row">
     {{range $b:=.blocks}}
-    <div class="col s12 m6 l4">
+    <div class="col s12 m6 l3">
         <div class="card cyan">
             <div class="card-content">
                 <span class="card-title">Height:#{{$b.Height}}</span>
@@ -31,6 +31,7 @@
                 <p>Timestamp: {{ $b.Timestamp }}</p>
                 <p>PrevHash: {{ $b.PrevHash | printf "%x" }}</p>
                 <p>Hash: {{ $b.Hash | printf "%x" }}</p>
+                <p>Nouce: {{ $b.Nouce | printf "%d" }}</p>
             </div>
             <!-- <div class="card-action">
                 <a href="#">This is a link</a>

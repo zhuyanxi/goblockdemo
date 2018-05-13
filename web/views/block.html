@@ -151,37 +151,16 @@
         //$("#hash_hashvalue").val($(this).val())
         var postData = $(this).val();
         $.ajax({
-            url: "/api/MineBlock",
+            url: "/api/SHA256",
             data: {
-                Height: $("#block_height").val(),
-                Data: postData,
-                PrevHash: $("#block_prevhash").val(),
-                Nouce: $("#block_nouce").val(),
+                postData
             },
             method: "POST",
             dataType: "JSON",
             success: data => {
                 var result = data;
                 $("#block_hash").val(result);
-                var Difficulty = $("#mine_difficulty option:selected").val();
-                if (result.indexOf(Difficulty) == 0) {
-                    $("#block_hash").parent().removeClass("cyan");
-                } else {
-                    $("#block_hash").parent().addClass("cyan");
-                }
             }
-        });
-        // $.ajax({
-        //     url: "/api/SHA256",
-        //     data: {
-        //         postData
-        //     },
-        //     method: "POST",
-        //     dataType: "JSON",
-        //     success: data => {
-        //         var result = data;
-        //         $("#hash_hashvalue").val(result);
-        //     }
-        // })
+        })
     });
 </script>

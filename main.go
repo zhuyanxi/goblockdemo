@@ -6,15 +6,15 @@ import (
 )
 
 func main() {
-	//bc := block.NewBlockchain()
+	// bc := block.NewBlockchain()
 	// bc.AddBlock("Send 1 btc to Alice")
 	// bc.AddBlock("Send 1.1 btc to Bob")
-	// fmt.Println("hello")
 	// for _, block := range bc.Blocks {
 	// 	fmt.Printf("Prev hash:%x\n", block.PrevHash)
 	// 	fmt.Printf("Data: %s\n", block.Data)
 	// 	fmt.Printf("Hash: %x\n", block.Hash)
 	// 	fmt.Printf("Timestamp: %x\n", block.Timestamp)
+	// 	fmt.Printf("Nouce: %d\n", block.Nouce)
 	// 	fmt.Println()
 	// }
 
@@ -51,7 +51,7 @@ func main() {
 		apiRoute.Post("/AddUser", AddUser)
 	}
 
-	app.Run(iris.Addr(":8080"), iris.WithCharset("UTF-8"), iris.WithoutVersionChecker)
+	app.Run(iris.Addr(":80"), iris.WithCharset("UTF-8"), iris.WithoutVersionChecker)
 }
 
 func logThisMiddleware(ctx iris.Context) {
@@ -60,12 +60,25 @@ func logThisMiddleware(ctx iris.Context) {
 }
 
 type User struct {
-	Id   int
-	Name string
+	ID        int
+	Name      string
+	Timestamp int64
+	Data      []byte
+	BaseInfo  BaseInfo
+}
+
+type BaseInfo struct {
+	Address string
+	City    string
+	Zipcode int
 }
 
 func AddUser(ctx iris.Context) {
 	var user User
+
+	//ctx.PostValue("baseinfo")
+
 	ctx.ReadJSON(&user)
-	ctx.Writef("%d %s", user.Id, user.Name)
+	ctx.Writef("%d, %s, %x, %d\n", user.ID, user.Name, user.Data, user.Timestamp)
+	ctx.Writef("%s, %s, %d", user.BaseInfo.Address, user.BaseInfo.City, user.BaseInfo.Zipcode)
 }
