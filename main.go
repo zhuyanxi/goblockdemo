@@ -1,22 +1,26 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/kataras/iris"
+	"github.com/zhuyanxi/goblockdemo/block"
 	Route "github.com/zhuyanxi/goblockdemo/routes"
 )
 
 func main() {
-	// bc := block.NewBlockchain()
-	// bc.AddBlock("Send 1 btc to Alice")
-	// bc.AddBlock("Send 1.1 btc to Bob")
-	// for _, block := range bc.Blocks {
-	// 	fmt.Printf("Prev hash:%x\n", block.PrevHash)
-	// 	fmt.Printf("Data: %s\n", block.Data)
-	// 	fmt.Printf("Hash: %x\n", block.Hash)
-	// 	fmt.Printf("Timestamp: %x\n", block.Timestamp)
-	// 	fmt.Printf("Nouce: %d\n", block.Nouce)
-	// 	fmt.Println()
-	// }
+	bc := block.NewBlockchain()
+	//bc.AddBlock("Send 1 btc to Alice")
+	//bc.AddBlock("Send 1.1 btc to Bob")
+	for _, block := range bc.Blocks {
+		fmt.Printf("Prev hash:%x\n", block.PrevHash)
+		fmt.Printf("Data: %s\n", block.Data)
+		fmt.Printf("Hash: %x\n", block.Hash)
+		fmt.Println(block.Hash)
+		fmt.Printf("Timestamp: %x\n", block.Timestamp)
+		fmt.Printf("Nouce: %d\n", block.Nouce)
+		fmt.Println()
+	}
 
 	app := iris.New()
 

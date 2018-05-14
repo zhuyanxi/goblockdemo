@@ -77,6 +77,7 @@
     }
 
     var wait = 0;
+    var mine_success = false;
     var Height = $("#block_height").val();
     var Timestamp = $("#block_timestamp").val();
     var Data = $("#block_hashData").val();
@@ -84,77 +85,76 @@
     var Hash = $("#block_hash").val();
 
     function time(o) {
-        if (wait == 10000000000000) {
+        if (mine_success) {
             o.removeAttribute("disabled");
             o.innerHTML = "Mine";
+            mine_success = false;
             wait = 0;
         } else {
             $("#block_nouce").val(wait);
             o.setAttribute("disabled", true);
             o.innerHTML = "Mining...";
 
-            $.ajax({
-                url: "/api/MineBlock",
-                data: {
-                    Height: $("#block_height").val(),
-                    Data: $("#block_hashData").val(),
-                    PrevHash: $("#block_prevhash").val(),
-                    Nouce: $("#block_nouce").val(),
-                },
-                method: "POST",
-                dataType: "JSON",
-                success: data => {
-                    var result = data;
-                    $("#block_hash").val(result);
-                    var Difficulty = $("#mine_difficulty option:selected").val();
-                    if (result.indexOf(Difficulty) == 0) {
-                        $("#block_hash").parent().removeClass("cyan");
-                        wait = 10000000000000;
-                    } else {
-                        $("#block_hash").parent().addClass("cyan");
-                    }
-                }
-            });
+            var result = ComputeBlockHash();
+            $("#block_hash").val(result);
+            var Difficulty = $("#mine_difficulty option:selected").val();
+            if (result.indexOf(Difficulty) == 0) {
+                $("#block_hash").parent().removeClass("cyan");
+                mine_success = true;
+            } else {
+                $("#block_hash").parent().addClass("cyan");
+            }
 
             wait++;
-            setTimeout(function () {
+            setTimeout(function() {
                 time(o)
             }, 0);
         }
     }
 
-    $("#block_mine").on("click", function () {
-        $("#block_nouce").focus();
-        //time(this);
-    })
 
-    $(document).on("input propertychange", "#block_hashData", function () {
-        //$("#hash_hashvalue").val($(this).val())
-        var postData = $(this).val();
-
-        var Height = $("#block_height").val();
-        var Timestamp = $("#block_timestamp").val();
-        var Data = $("#block_hashData").val();
-        var PrevHash = $("#block_prevhash").val();
-        var Hash = $("#block_hash").val();
-        var Nouce = $("#block_nouce").val();
-
+    function ComputeBlockHash() {
+        var block_hash;
+        var Height = parseInt($("#block_height").val());
+        var Timestamp = parseInt($("#block_timestamp").val());
+        var Data = Convert.StringToByte($("#block_hashData").val());
+        var PrevHash = Convert.HexStrToByteArray($("#block_prevhash").val());
+        var Hash = Convert.HexStrToByteArray($("#block_hash").val());
+        var Nouce = parseInt($("#block_nouce").val());
         $.ajax({
             url: "/api/ComputeBlockHash",
+            //contentType: "application/json",
+            async: false,
             data: {
-                "Height": $("#block_height").val(),
-                "Timestamp": $("#block_timestamp").val(),
-                "Data": $("#block_hashData").val(),
-                "PrevHash": $("#block_prevhash").val(),
-                "Hash": $("#block_hash").val(),
-                "Nouce": $("#block_nouce").val()
+                "Height": Height,
+                "Timestamp": Timestamp,
+                "Data": Data,
+                "PrevHash": PrevHash,
+                "Hash": Hash,
+                "Nouce": Nouce
             },
             method: "POST",
             dataType: "JSON",
             success: data => {
                 var result = data;
-                $("#block_hash").val(result);
+                block_hash = result;
             }
-        })
+        });
+        return block_hash;
+    }
+
+    $("#block_mine").on("click", function() {
+        $("#block_nouce").focus();
+        time(this);
+    })
+
+    $(document).on("input propertychange", "#block_hashData", function() {
+        var result = ComputeBlockHash();
+        $("#block_hash").val(result);
+        if (result.indexOf($("#mine_difficulty option:selected").val()) == 0) {
+            $("#block_hash").parent().removeClass("cyan");
+        } else {
+            $("#block_hash").parent().addClass("cyan");
+        }
     });
 </script>

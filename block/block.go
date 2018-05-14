@@ -3,8 +3,9 @@ package block
 import (
 	"bytes"
 	"crypto/sha256"
-	"strconv"
 	"time"
+
+	Util "github.com/zhuyanxi/goblockdemo/util"
 )
 
 // Block :
@@ -20,13 +21,33 @@ type Block struct {
 // SetHash :
 func (b *Block) SetHash() {
 	var headers []byte
-	timestamp := []byte(strconv.FormatInt(b.Timestamp, 10))
-	height := []byte(strconv.FormatInt(b.Height, 10))
-	nouce := []byte(strconv.FormatInt(int64(b.Nouce), 10))
+	timestamp := Util.IntToHex(b.Timestamp)
+	height := Util.IntToHex(b.Height)
+	nouce := Util.IntToHex(int64(b.Nouce))
+	difficult := Util.IntToHex(int64(DifficultyBits))
 	if b.Height == 0 {
-		headers = bytes.Join([][]byte{b.PrevHash, b.Data, height, nouce}, []byte{})
+		headers = bytes.Join(
+			[][]byte{
+				b.PrevHash,
+				b.Data,
+				height,
+				difficult,
+				nouce,
+			},
+			[]byte{},
+		)
 	} else {
-		headers = bytes.Join([][]byte{b.PrevHash, b.Data, timestamp, height, nouce}, []byte{})
+		headers = bytes.Join(
+			[][]byte{
+				b.PrevHash,
+				b.Data,
+				timestamp,
+				height,
+				difficult,
+				nouce,
+			},
+			[]byte{},
+		)
 	}
 	hash := sha256.Sum256(headers)
 	b.Hash = hash[:]

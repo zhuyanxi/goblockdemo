@@ -14,7 +14,8 @@ var (
 	maxNouce = math.MaxInt64
 )
 
-const difficultBits = 12
+// DifficultyBits : define the hash string of data starts with how many 0 bits
+const DifficultyBits = 12
 
 // ProofOfWork :
 type ProofOfWork struct {
@@ -22,16 +23,16 @@ type ProofOfWork struct {
 	target *big.Int
 }
 
-//NewPOW :
+// NewPOW :
 func NewPOW(b *Block) *ProofOfWork {
 	target := big.NewInt(1)
-	target.Lsh(target, uint(256-difficultBits))
+	target.Lsh(target, uint(256-DifficultyBits))
 
 	pow := &ProofOfWork{b, target}
 	return pow
 }
 
-func (pow *ProofOfWork) prepareData(nouce int) []byte {
+func (pow *ProofOfWork) PrepareData(nouce int) []byte {
 	var data []byte
 
 	if pow.block.Height == 0 {
@@ -40,7 +41,7 @@ func (pow *ProofOfWork) prepareData(nouce int) []byte {
 				pow.block.PrevHash,
 				pow.block.Data,
 				Util.IntToHex(pow.block.Height),
-				Util.IntToHex(int64(difficultBits)),
+				Util.IntToHex(int64(DifficultyBits)),
 				Util.IntToHex(int64(nouce)),
 			},
 			[]byte{},
@@ -52,7 +53,7 @@ func (pow *ProofOfWork) prepareData(nouce int) []byte {
 				pow.block.Data,
 				Util.IntToHex(pow.block.Timestamp),
 				Util.IntToHex(pow.block.Height),
-				Util.IntToHex(int64(difficultBits)),
+				Util.IntToHex(int64(DifficultyBits)),
 				Util.IntToHex(int64(nouce)),
 			},
 			[]byte{},
@@ -70,18 +71,18 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 
 	fmt.Printf("Mining the block containing \"%s\"\n", pow.block.Data)
 	for nouce < maxNouce {
-		data := pow.prepareData(nouce)
+		data := pow.PrepareData(nouce)
 		hash = sha256.Sum256(data)
 		hashInt.SetBytes(hash[:])
 		//fmt.Printf("\r%x", hash)
 		if hashInt.Cmp(pow.target) == -1 {
 			break
 		} else {
-			fmt.Println(nouce)
+			//fmt.Println(nouce)
 			nouce++
 		}
 	}
-	fmt.Printf("\n\n")
+	fmt.Printf("\n")
 	return nouce, hash[:]
 }
 
@@ -89,7 +90,7 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 func (pow *ProofOfWork) Validate() bool {
 	var hashInt big.Int
 
-	data := pow.prepareData(pow.block.Nouce)
+	data := pow.PrepareData(pow.block.Nouce)
 	hash := sha256.Sum256(data)
 	hashInt.SetBytes(hash[:])
 
