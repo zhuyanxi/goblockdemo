@@ -48,6 +48,7 @@ func main() {
 	{
 		apiRoute.Post("/SHA256", Route.SHA256)
 		apiRoute.Post("/MineBlock", Route.MineBlock)
+		apiRoute.Post("/ComputeBlockHash", Route.ComputeBlockHash)
 		apiRoute.Post("/AddUser", AddUser)
 	}
 
@@ -55,7 +56,7 @@ func main() {
 }
 
 func logThisMiddleware(ctx iris.Context) {
-	ctx.Application().Logger().Infof("Path:%s|IP:%s", ctx.Path(), ctx.RemoteAddr())
+	ctx.Application().Logger().Infof("Path:%s | IP:%s", ctx.Path(), ctx.RemoteAddr())
 	ctx.Next()
 }
 

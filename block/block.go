@@ -29,7 +29,6 @@ func (b *Block) SetHash() {
 		headers = bytes.Join([][]byte{b.PrevHash, b.Data, timestamp, height, nouce}, []byte{})
 	}
 	hash := sha256.Sum256(headers)
-
 	b.Hash = hash[:]
 }
 

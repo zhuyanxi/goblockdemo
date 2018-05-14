@@ -16,7 +16,8 @@
                     <div class="row">
                         <div class="input-field col s6">
                             <input type="text" id="block_height" class="validate" disabled value="{{.block.Height}}">
-                            <label for="block_height"><i class="fa fa-hashtag"></i>Height</label>
+                            <label for="block_height">
+                                <i class="fa fa-hashtag"></i>Height</label>
                         </div>
                         <div class="input-field col s6">
                             <input type="text" id="block_timestamp" class="validate" disabled value="{{.block.Timestamp}}">
@@ -44,7 +45,8 @@
                     <div class="row">
                         <div class="input-field col s12">
                             <input type="text" id="block_nouce" class="validate" value="{{.block.Nouce}}">
-                            <label for="block_nouce"><i class="fa fa-hashtag"></i>Nouce</label>
+                            <label for="block_nouce">
+                                <i class="fa fa-hashtag"></i>Nouce</label>
                         </div>
                     </div>
 
@@ -115,45 +117,37 @@
             });
 
             wait++;
-            setTimeout(function() {
+            setTimeout(function () {
                 time(o)
             }, 0);
         }
     }
 
-    $("#block_mine").on("click", function() {
+    $("#block_mine").on("click", function () {
         $("#block_nouce").focus();
-        // var Difficulty = $("#mine_difficulty option:selected").val();
-        // if ($("#block_hash").val().indexOf("9") == 0) {
-        //     alert("ok");
-        // } else {
-        //     alert("bad");
-        // }
-        // $.ajax({
-        //     url: "/api/MineBlock",
-        //     data: {
-        //         Height: Height,
-        //         Data: Data,
-        //         PrevHash: PrevHash,
-        //         Nouce: 369,
-        //     },
-        //     method: "POST",
-        //     dataType: "JSON",
-        //     success: data => {
-        //         var result = data;
-        //         $("#block_hash").val(result);
-        //     }
-        // });
-        time(this);
+        //time(this);
     })
 
-    $(document).on("input propertychange", "#block_hashData", function() {
+    $(document).on("input propertychange", "#block_hashData", function () {
         //$("#hash_hashvalue").val($(this).val())
         var postData = $(this).val();
+
+        var Height = $("#block_height").val();
+        var Timestamp = $("#block_timestamp").val();
+        var Data = $("#block_hashData").val();
+        var PrevHash = $("#block_prevhash").val();
+        var Hash = $("#block_hash").val();
+        var Nouce = $("#block_nouce").val();
+
         $.ajax({
-            url: "/api/SHA256",
+            url: "/api/ComputeBlockHash",
             data: {
-                postData
+                "Height": $("#block_height").val(),
+                "Timestamp": $("#block_timestamp").val(),
+                "Data": $("#block_hashData").val(),
+                "PrevHash": $("#block_prevhash").val(),
+                "Hash": $("#block_hash").val(),
+                "Nouce": $("#block_nouce").val()
             },
             method: "POST",
             dataType: "JSON",
