@@ -14,3 +14,4 @@ https_proxy=http://127.0.0.1:27315 go get -u -v github.com/davidrjenni/reftools/
 
 https_proxy=http://127.0.0.1:27315 go get -u -v github.com/zemirco/couchdb
 https_proxy=http://127.0.0.1:27315 go get -u -v gopkg.in/couchbase/gocb.v1
+https_proxy=http://127.0.0.1:27315 go get -u -v github.com/couchbase/gocb

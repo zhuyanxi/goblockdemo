@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+	//couchdb admin: user:zhuyx; pwd:zhuyx123
 	bc := block.NewBlockchain()
 	//bc.AddBlock("Send 1 btc to Alice")
 	//bc.AddBlock("Send 1.1 btc to Bob")
