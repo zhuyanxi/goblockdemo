@@ -26,11 +26,11 @@
     <div class="col s12">
         <div class="card cyan">
             <div class="card-content">
-                <span class="card-title">Height:#{{$b.Height}}</span>
-                <span class="card-title">Data:{{$b.Data | printf "%s" }}</span>
+                <span class="card-title">Hash: {{ $b.Hash | printf "%x" }}</span>
+                <p>Height:#{{$b.Height}}</p>
                 <p>Timestamp: {{ $b.Timestamp }}</p>
                 <p>PrevHash: {{ $b.PrevHash | printf "%x" }}</p>
-                <p>Hash: {{ $b.Hash | printf "%x" }}</p>
+                <p>Data:{{$b.Data | printf "%s" }}</p>
                 <p>Nouce: {{ $b.Nouce | printf "%d" }}</p>
             </div>
             <!-- <div class="card-action">

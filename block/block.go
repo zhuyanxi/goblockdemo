@@ -3,6 +3,8 @@ package block
 import (
 	"bytes"
 	"crypto/sha256"
+	"encoding/json"
+	"log"
 	"time"
 
 	Util "github.com/zhuyanxi/goblockdemo/util"
@@ -61,6 +63,21 @@ func NewBlock(height int64, data string, prevBlockHash []byte) *Block {
 
 	block.Hash = hash[:]
 	block.Nouce = nouce
-	//block.SetHash()
 	return block
+}
+
+// ToJSONByte : return []byte of the block's json string
+func (b *Block) ToJSONByte() []byte {
+	jsonBlock, _ := json.Marshal(b)
+	return jsonBlock
+}
+
+// DecodeJSONBlock :
+func DecodeJSONBlock(d []byte) *Block {
+	var block Block
+	err := json.Unmarshal(d, &block)
+	if err != nil {
+		log.Println(err)
+	}
+	return &block
 }
