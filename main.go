@@ -60,7 +60,7 @@ func main() {
 		apiRoute.Post("/AddUser", AddUser)
 	}
 
-	app.Run(iris.Addr(":80"), iris.WithCharset("UTF-8"), iris.WithoutVersionChecker)
+	app.Run(iris.Addr(":8080"), iris.WithCharset("UTF-8"), iris.WithoutVersionChecker)
 }
 
 func logThisMiddleware(ctx iris.Context) {
