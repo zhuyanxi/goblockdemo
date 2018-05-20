@@ -31,6 +31,7 @@ func NewPOW(b *Block) *ProofOfWork {
 	return pow
 }
 
+// PrepareData :
 func (pow *ProofOfWork) PrepareData(nouce int) []byte {
 	var data []byte
 

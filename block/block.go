@@ -7,6 +7,8 @@ import (
 	"log"
 	"time"
 
+	"github.com/zemirco/couchdb"
+
 	Util "github.com/zhuyanxi/goblockdemo/util"
 )
 
@@ -18,6 +20,13 @@ type Block struct {
 	PrevHash  []byte
 	Hash      []byte
 	Nouce     int
+}
+
+// BlockDB
+// key-value is blockhash->Block
+type BlockDB struct {
+	couchdb.Document
+	BlockMap map[string]Block
 }
 
 // SetHash :
