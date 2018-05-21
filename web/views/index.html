@@ -1,4 +1,5 @@
 <h1>Blockchain</h1>
+<h6>Blockchain的基本结构，每个Block都包含有自身的Hash值、Timestamp、上一区块的Hash值、Data、Height值以及一个Nouce。</h6>
 
 <!-- <div class="row">
     <div class="col s12 m6 l3">
@@ -26,11 +27,11 @@
     <div class="col s12">
         <div class="card cyan">
             <div class="card-content">
-                <span class="card-title">Height:#{{$b.Height}}</span>
-                <span class="card-title">Data:{{$b.Data | printf "%s" }}</span>
+                <span class="card-title">Hash: {{ $b.Hash | printf "%x" }}</span>
+                <p>Height:#{{$b.Height}}</p>
                 <p>Timestamp: {{ $b.Timestamp }}</p>
                 <p>PrevHash: {{ $b.PrevHash | printf "%x" }}</p>
-                <p>Hash: {{ $b.Hash | printf "%x" }}</p>
+                <p>Data:{{$b.Data | printf "%s" }}</p>
                 <p>Nouce: {{ $b.Nouce | printf "%d" }}</p>
             </div>
             <!-- <div class="card-action">

@@ -3,7 +3,11 @@ package block
 import (
 	"bytes"
 	"crypto/sha256"
+	"encoding/json"
+	"log"
 	"time"
+
+	"github.com/zemirco/couchdb"
 
 	Util "github.com/zhuyanxi/goblockdemo/util"
 )
@@ -16,6 +20,13 @@ type Block struct {
 	PrevHash  []byte
 	Hash      []byte
 	Nouce     int
+}
+
+// BlockDB
+// key-value is blockhash->Block
+type BlockDB struct {
+	couchdb.Document
+	BlockMap map[string]Block
 }
 
 // SetHash :
@@ -61,6 +72,21 @@ func NewBlock(height int64, data string, prevBlockHash []byte) *Block {
 
 	block.Hash = hash[:]
 	block.Nouce = nouce
-	//block.SetHash()
 	return block
+}
+
+// ToJSONByte : return []byte of the block's json string
+func (b *Block) ToJSONByte() []byte {
+	jsonBlock, _ := json.Marshal(b)
+	return jsonBlock
+}
+
+// DecodeJSONBlock :
+func DecodeJSONBlock(d []byte) *Block {
+	var block Block
+	err := json.Unmarshal(d, &block)
+	if err != nil {
+		log.Println(err)
+	}
+	return &block
 }

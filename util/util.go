@@ -1,7 +1,6 @@
 package util
 
 import (
-	"fmt"
 	"math/rand"
 	"strconv"
 	"time"
@@ -11,7 +10,7 @@ import (
 func RandSleep() {
 	rand.Seed(time.Now().UnixNano())
 	x := rand.Intn(200)
-	fmt.Println(x)
+	//fmt.Println(x)
 	time.Sleep(time.Duration(x) * time.Millisecond)
 }
 

@@ -3,7 +3,6 @@ package block
 import (
 	"bytes"
 	"crypto/sha256"
-	"fmt"
 	"math"
 	"math/big"
 
@@ -32,6 +31,7 @@ func NewPOW(b *Block) *ProofOfWork {
 	return pow
 }
 
+// PrepareData :
 func (pow *ProofOfWork) PrepareData(nouce int) []byte {
 	var data []byte
 
@@ -69,7 +69,7 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 	var hash [32]byte
 	nouce := 0
 
-	fmt.Printf("Mining the block containing \"%s\"\n", pow.block.Data)
+	//fmt.Printf("Mining the block containing \"%s\"\n", pow.block.Data)
 	for nouce < maxNouce {
 		data := pow.PrepareData(nouce)
 		hash = sha256.Sum256(data)
@@ -82,7 +82,7 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 			nouce++
 		}
 	}
-	fmt.Printf("\n")
+	//fmt.Printf("\n")
 	return nouce, hash[:]
 }
 
