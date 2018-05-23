@@ -1,17 +1,10 @@
 package couchdb
 
 import (
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 )
-
-// CouchClient :
-type CouchClient struct {
-	Username string
-	Password string
-	BaseURL  string
-}
 
 // NewCouchClient :
 func NewCouchClient(user, pwd, url string) CouchClient {
@@ -22,22 +15,30 @@ func NewCouchClient(user, pwd, url string) CouchClient {
 	}
 }
 
-// DBInfo :
-func (c CouchClient) DBInfo() string {
-	url := c.BaseURL
-	req, _ := http.NewRequest("GET", url, nil)
+// Request : request couchdb webapi
+func (cc *CouchClient) Request(method, url string, data io.Reader) (*http.Response, error) {
+	req, err := http.NewRequest(method, url, nil)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
 
 	req.Header.Add("Content-Type", "application/json")
-	req.SetBasicAuth(c.Username, c.Password)
+	req.SetBasicAuth(cc.Username, cc.Password)
 	req.Header.Add("Cache-Control", "no-cache")
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println(err)
+		return nil, err
 	}
+	return res, nil
+}
 
-	defer res.Body.Close()
-	body, _ := ioutil.ReadAll(res.Body)
-
-	return string(body)
+// DBInstance : return a database instance
+func (cc *CouchClient) DBInstance(dbname string) Database {
+	return Database{
+		CouchClient: cc,
+		Name:        dbname,
+	}
 }
