@@ -3,6 +3,8 @@ package couchdb
 import (
 	"fmt"
 	"testing"
+
+	"github.com/zhuyanxi/goblockdemo/block"
 )
 
 const url = "http://127.0.0.1:5984"
@@ -51,7 +53,7 @@ func TestGetDBinfo(t *testing.T) {
 
 func TestCreateDB(t *testing.T) {
 	client := NewCouchClient("zhuyx", "zhuyx123", url)
-	dbok, dberror, err := client.CreateDB("user2")
+	dbok, dberror, err := client.CreateDB("block")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -70,5 +72,21 @@ func TestDeleteDB(t *testing.T) {
 	if !dbok.OK {
 		t.Errorf("error dbinfo: %t", dbok.OK)
 		t.Errorf("error dbinfo: %s", dberr.Reason)
+	}
+}
+
+func TestNewDocument(t *testing.T) {
+	blk := block.NewBlock(2, "The First Block", []byte{})
+	blkdb := blk.GenerateBlockMap()
+
+	client := NewCouchClient("zhuyx", "zhuyx123", url)
+	db := client.DBInstance("block")
+	res, reserr, err := db.NewDocument(blkdb)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !res.OK {
+		t.Errorf("error dbinfo: %s", res.ID)
+		t.Errorf("error dbinfo: %s", reserr.Error)
 	}
 }

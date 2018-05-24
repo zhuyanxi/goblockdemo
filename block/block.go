@@ -3,11 +3,10 @@ package block
 import (
 	"bytes"
 	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"log"
 	"time"
-
-	"github.com/zemirco/couchdb"
 
 	Util "github.com/zhuyanxi/goblockdemo/util"
 )
@@ -25,7 +24,6 @@ type Block struct {
 // BlockDB
 // key-value is blockhash->Block
 type BlockDB struct {
-	couchdb.Document
 	BlockMap map[string]Block
 }
 
@@ -89,4 +87,13 @@ func DecodeJSONBlock(d []byte) *Block {
 		log.Println(err)
 	}
 	return &block
+}
+
+// GenerateBlockMap :
+func (b *Block) GenerateBlockMap() map[string]string {
+	r := make(map[string]string)
+	blkjson, _ := json.Marshal(b)
+	r["_id"] = hex.EncodeToString(b.Hash) //customize couchdb _id
+	r[hex.EncodeToString(b.Hash)] = string(blkjson)
+	return r
 }

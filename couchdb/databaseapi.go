@@ -1,6 +1,7 @@
 package couchdb
 
 import (
+	"bytes"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -78,23 +79,40 @@ func (cc *CouchClient) DeleteDB(dbname string) (*ResponseOK, *ResponseError, err
 	return &ok, &reserr, err
 }
 
-// NewDocument :
-func (db *Database) NewDocument(e interface{}) (*ResponseDoc, error) {
+// NewDocument : Creates a new document in the specified database, using the supplied JSON document structure.
+// s can be a struct, map or any other valid data structure
+func (db *Database) NewDocument(s interface{}) (*ResponseDoc, *ResponseError, error) {
 	client := db.CouchClient
 	url := client.BaseURL + "/" + db.Name
-	res, err := client.Request(http.MethodPost, url, nil)
+	var payload bytes.Buffer
+	if err := json.NewEncoder(&payload).Encode(s); err != nil {
+		return nil, nil, err
+	}
+	res, err := client.Request(http.MethodPost, url, &payload)
 	if err != nil {
 		log.Println(err)
-		return nil, err
+		return nil, nil, err
 	}
 
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-
+	log.Println(string(body))
 	var docres ResponseDoc
-	err = json.Unmarshal(body, &docres)
-	return &docres, err
+	var reserr ResponseError
+	if res.StatusCode == 201 {
+		err = json.Unmarshal(body, &docres)
+	} else {
+		err = json.Unmarshal(body, &reserr)
+	}
+	return &docres, &reserr, err
+}
+
+// GetDocsByKeys : Returns a JSON structure of all of the documents in a given database.
+// The POST to _all_docs allows to specify multiple keys to be selected from the database.
+// Param (s string) is the json string of keys, like {"keys" : ["key1","key2"]}
+func (db *Database) GetDocsByKeys(s string) string {
+	return ""
 }

@@ -17,7 +17,7 @@ func NewCouchClient(user, pwd, url string) CouchClient {
 
 // Request : request couchdb webapi
 func (cc *CouchClient) Request(method, url string, data io.Reader) (*http.Response, error) {
-	req, err := http.NewRequest(method, url, nil)
+	req, err := http.NewRequest(method, url, data)
 	if err != nil {
 		log.Println(err)
 		return nil, err
