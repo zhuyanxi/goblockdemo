@@ -7,7 +7,7 @@ import (
 	"github.com/zhuyanxi/goblockdemo/block"
 )
 
-const url = "http://127.0.0.1:5984"
+const url = "http://127.0.0.1:32769"
 
 // TestDBInfo : test func serverapi->DBInfo
 func TestDBInfo(t *testing.T) {
@@ -42,7 +42,7 @@ func TestGetAllDB(t *testing.T) {
 
 func TestGetDBinfo(t *testing.T) {
 	client := NewCouchClient("zhuyx", "zhuyx123", url)
-	dbinfo, err := client.GetDbInfo("user")
+	dbinfo, err := client.GetDbInfo("_users")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -65,7 +65,7 @@ func TestCreateDB(t *testing.T) {
 
 func TestDeleteDB(t *testing.T) {
 	client := NewCouchClient("zhuyx", "zhuyx123", url)
-	dbok, dberr, err := client.DeleteDB("user3")
+	dbok, dberr, err := client.DeleteDB("block")
 	if err != nil {
 		t.Fatal(err)
 	}
