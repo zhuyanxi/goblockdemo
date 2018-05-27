@@ -3,6 +3,7 @@ package couchdb
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -111,8 +112,27 @@ func (db *Database) NewDocument(s interface{}) (*ResponseDoc, *ResponseError, er
 }
 
 // GetDocsByKeys : Returns a JSON structure of all of the documents in a given database.
-// The POST to _all_docs allows to specify multiple keys to be selected from the database.
-// Param (s string) is the json string of keys, like {"keys" : ["key1","key2"]}
-func (db *Database) GetDocsByKeys(s string) string {
-	return ""
+// The Get _all_docs allows to specify multiple keys to be selected from the database.
+// Param (s []string) is the  string of keys, like ["key1","key2"]
+func (db *Database) GetDocsByKeys(s []string) (*CouchDocument, error) {
+	client := db.CouchClient
+	//url := client.BaseURL + "/" + db.Name+"/_all_docs"
+	keys, _ := json.Marshal(s)
+	param := "include_docs=true&keys=" + string(keys)
+	url := client.BaseURL + fmt.Sprintf("/%s/_all_docs?%s", db.Name, param)
+	res, err := client.Request(http.MethodGet, url, nil)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	defer res.Body.Close()
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+	log.Println(string(body))
+	var doc CouchDocument
+	err = json.Unmarshal(body, &doc)
+
+	return &doc, err
 }

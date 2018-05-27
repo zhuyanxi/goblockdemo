@@ -69,3 +69,17 @@ type DatabaseInfo struct {
 	}
 	InstanceStartTime string `json:"instance_start_time"`
 }
+
+// CouchDocument : the struct of documents returned form api:GET /{db}/_all_docs
+type CouchDocument struct {
+	TotalRows int           `json:"total_rows"`
+	Rows      []CouchDocRow `json:"rows"`
+}
+
+// CouchDocRow : the document's rows
+type CouchDocRow struct {
+	ID    string                 `json:"id"`
+	Key   interface{}            `json:"key"`
+	Value interface{}            `json:"value"`
+	Doc   map[string]interface{} `json:"doc"`
+}
