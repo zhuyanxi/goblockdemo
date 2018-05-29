@@ -94,6 +94,8 @@ func (b *Block) GenerateBlockMap() map[string]string {
 	r := make(map[string]string)
 	blkjson, _ := json.Marshal(b)
 	r["_id"] = hex.EncodeToString(b.Hash) //customize couchdb _id
-	r[hex.EncodeToString(b.Hash)] = string(blkjson)
+	r["prev"] = hex.EncodeToString(b.PrevHash)
+	r["blkjson"] = string(blkjson)
+	//r[hex.EncodeToString(b.Hash)] = string(blkjson)
 	return r
 }

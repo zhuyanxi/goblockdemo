@@ -38,6 +38,7 @@ func (cc *CouchClient) CreateDB(dbname string) (*ResponseOK, *ResponseError, err
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
+		log.Println(err)
 		return nil, nil, err
 	}
 
@@ -114,7 +115,7 @@ func (db *Database) NewDocument(s interface{}) (*ResponseDoc, *ResponseError, er
 // GetDocsByKeys : Returns a JSON structure of all of the documents in a given database.
 // The Get _all_docs allows to specify multiple keys to be selected from the database.
 // Param (s []string) is the  string of keys, like ["key1","key2"]
-func (db *Database) GetDocsByKeys(s []string) (*CouchDocument, error) {
+func (db *Database) GetAllDocsByKeys(s []string) (*CouchDocument, error) {
 	client := db.CouchClient
 	//url := client.BaseURL + "/" + db.Name+"/_all_docs"
 	keys, _ := json.Marshal(s)

@@ -1,6 +1,14 @@
 package block
 
+import (
+	"encoding/hex"
+	"log"
+
+	"github.com/zhuyanxi/goblockdemo/couchdb"
+)
+
 const dbName = "blockchain"
+const url = "http://127.0.0.1:5984"
 
 // BlockChain :
 type BlockChain struct {
@@ -20,8 +28,22 @@ func newGenesisBlock() *Block {
 // NewBlockChain :
 func NewBlockChain() *BlockChain {
 	var tipHash []byte
-	gene := newGenesisBlock()
-	tipHash = gene.Hash
+
+	client := couchdb.NewCouchClient("zhuyx", "zhuyx123", url)
+	dbok, dberror, err := client.CreateDB(dbName)
+	if dbok.OK {
+		gene := newGenesisBlock()
+		tipHash = gene.Hash
+		r := make(map[string]string)
+		r["tiphash"] = hex.EncodeToString(tipHash)
+
+		db := client.DBInstance("block")
+		db.NewDocument(r)
+	} else {
+		log.Println(err)
+		log.Println(dberror.Reason)
+	}
+
 	bc := BlockChain{tipHash: tipHash}
 	return &bc
 }
