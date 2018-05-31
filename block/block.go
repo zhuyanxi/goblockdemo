@@ -21,10 +21,19 @@ type Block struct {
 	Nouce     int
 }
 
-// BlockDB
-// key-value is blockhash->Block
-type BlockDB struct {
-	BlockMap map[string]Block
+// BDoc : the doc
+type BDoc struct {
+	ID      string `json:"_id"`
+	Rev     string `json:"_rev"`
+	Prev    string `json:"prev"`
+	Blkjson string `json:"blkjson"`
+}
+
+// BTipDoc :
+type BTipDoc struct {
+	ID      string `json:"_id"`
+	Rev     string `json:"_rev"`
+	Tiphash string `json:"tiphash"`
 }
 
 // SetHash :
@@ -96,6 +105,5 @@ func (b *Block) GenerateBlockMap() map[string]string {
 	r["_id"] = hex.EncodeToString(b.Hash) //customize couchdb _id
 	r["prev"] = hex.EncodeToString(b.PrevHash)
 	r["blkjson"] = string(blkjson)
-	//r[hex.EncodeToString(b.Hash)] = string(blkjson)
 	return r
 }

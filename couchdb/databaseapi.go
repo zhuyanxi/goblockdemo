@@ -112,7 +112,7 @@ func (db *Database) NewDocument(s interface{}) (*ResponseDoc, *ResponseError, er
 	return &docres, &reserr, err
 }
 
-// GetDocsByKeys : Returns a JSON structure of all of the documents in a given database.
+// GetAllDocsByKeys : Returns a JSON structure of all of the documents in a given database.
 // The Get _all_docs allows to specify multiple keys to be selected from the database.
 // Param (s []string) is the  string of keys, like ["key1","key2"]
 func (db *Database) GetAllDocsByKeys(s []string) (*CouchDocument, error) {

@@ -83,17 +83,6 @@ type CouchDocRow struct {
 	Value struct {
 		Rev string `json:"rev"`
 	} `json:"value"`
-	Doc CouchDoc `json:"doc"`
-	// Doc struct {
-	// 	ID   string `json:"_id"`
-	// 	Rev  string `json:"_rev"`
-	// 	interface{}
-	// }
-}
-
-// CouchDoc : the doc
-type CouchDoc struct {
-	ID      string `json:"_id"`
-	Rev     string `json:"_rev"`
-	Blkjson string `json:"blkjson"`
+	//Doc BlockDoc `json:"doc"`
+	Doc interface{} `json:"doc"`
 }
