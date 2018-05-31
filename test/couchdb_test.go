@@ -77,8 +77,8 @@ func TestDeleteDB(t *testing.T) {
 }
 
 func TestNewDocument(t *testing.T) {
-	btt := []byte("0008df6a7572496ea3d34afd5a30d75bcd0ca7043ed55903927321a5291c0a0f")
-	//btt:=[]byte{}
+	btt := []byte("0006cedcd17986875c9b28a4ed2c3e7f415d6e263e9bae13b1c9ed44663479cc")
+	//btt := []byte{}
 	blk := block.NewBlock(1, "The Second Block", btt)
 	blkdb := blk.GenerateBlockMap()
 
@@ -109,7 +109,7 @@ func TestGetAllDocsByKeys(t *testing.T) {
 }
 
 func TestGetDoc(t *testing.T) {
-	key := "000adee885937aa896db7f9f7a3705060fea6ef1379bf517266706c360326bc"
+	key := "0006cedcd17986875c9b28a4ed2c3e7f415d6e263e9bae13b1c9ed44663479cc"
 	client := couchdb.NewCouchClient("zhuyx", "zhuyx123", url)
 	db := client.DBInstance("block")
 	doc, reserr, err := db.GetDoc(key)
