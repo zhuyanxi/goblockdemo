@@ -40,7 +40,8 @@ func (db *Database) GetDoc(id string) ([]byte, *ResponseError, error) {
 
 // UpdateDoc : The PUT method creates a new named document, or creates a new revision of the existing document.
 // s is the json of data that is to be updated
-func (db *Database) UpdateDoc(id string, s interface{}) ([]byte, *ResponseError, error) {
+// s must have the key "_rev" of the specified doc
+func (db *Database) UpdateDoc(id string, s interface{}) (*ResponseDoc, *ResponseError, error) {
 	client := db.CouchClient
 	url := client.BaseURL + "/" + db.Name + "/" + id
 	var payload bytes.Buffer
@@ -59,14 +60,14 @@ func (db *Database) UpdateDoc(id string, s interface{}) ([]byte, *ResponseError,
 		return nil, nil, err
 	}
 
-	var doc []byte
+	var doc ResponseDoc
 	var reserr ResponseError
 	log.Println(string(body))
-	if res.StatusCode == 200 {
-		doc = body
+	if res.StatusCode == 201 {
+		err = json.Unmarshal(body, &doc)
 	} else {
 		err = json.Unmarshal(body, &reserr)
 	}
 
-	return doc, &reserr, err
+	return &doc, &reserr, err
 }

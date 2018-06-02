@@ -34,6 +34,7 @@ type BTipDoc struct {
 	ID      string `json:"_id"`
 	Rev     string `json:"_rev"`
 	Tiphash string `json:"tiphash"`
+	Height  int64  `json:"height"`
 }
 
 // SetHash :
@@ -104,6 +105,6 @@ func (b *Block) GenerateBlockMap() map[string]string {
 	blkjson, _ := json.Marshal(b)
 	r["_id"] = hex.EncodeToString(b.Hash) //customize couchdb _id
 	r["prev"] = hex.EncodeToString(b.PrevHash)
-	r["blkjson"] = string(blkjson)
+	r["blkjson"] = hex.EncodeToString(blkjson)
 	return r
 }
