@@ -28,7 +28,7 @@ func (db *Database) GetDoc(id string) ([]byte, *ResponseError, error) {
 
 	var doc []byte
 	var reserr ResponseError
-	log.Println(string(body))
+	log.Printf("GetDoc info: %s\n", string(body))
 	if res.StatusCode == 200 {
 		doc = body
 	} else {

@@ -11,8 +11,8 @@ import (
 //const dbName = "blockchain"
 const url = "http://127.0.0.1:5984"
 
-// BlockChain :
-type BlockChain struct {
+// Chain :
+type Chain struct {
 	TipHash []byte
 	Height  int64
 	DB      couchdb.Database
@@ -39,8 +39,10 @@ func getTipDoc(db couchdb.Database) *BTipDoc {
 	return &doc
 }
 
-// NewBlockChain :
-func NewBlockChain(dbName string) *BlockChain {
+// NewBlockChain : Create the BlockChain database
+// if the db is already exist, return the BlockChain entity;
+// if the db is not exist, create the database and add the tip_doc and the genesis doc
+func NewBlockChain(dbName string) *Chain {
 	var tipHash []byte
 	var height int64
 
@@ -80,15 +82,15 @@ func NewBlockChain(dbName string) *BlockChain {
 		height = doc.Height
 	}
 
-	bc := BlockChain{TipHash: tipHash, Height: height, DB: db}
+	bc := Chain{TipHash: tipHash, Height: height, DB: db}
 	return &bc
 }
 
 // AddBlock :
-func (bc *BlockChain) AddBlock(data string) error {
-	newBlock := NewBlock(bc.Height+1, data, bc.TipHash)
+func (c *Chain) AddBlock(data string) error {
+	newBlock := NewBlock(c.Height+1, data, c.TipHash)
 
-	res, reserr, err := bc.DB.NewDocument(newBlock.GenerateBlockMap())
+	res, reserr, err := c.DB.NewDocument(newBlock.GenerateBlockMap())
 	if err != nil {
 		log.Println(err)
 		return err
@@ -98,12 +100,12 @@ func (bc *BlockChain) AddBlock(data string) error {
 		return err
 	}
 
-	tipdoc := getTipDoc(bc.DB)
+	tipdoc := getTipDoc(c.DB)
 	r := make(map[string]interface{})
 	r["_rev"] = tipdoc.Rev
 	r["tiphash"] = hex.EncodeToString(newBlock.Hash)
 	r["height"] = newBlock.Height
-	resdoc, reserr, err := bc.DB.UpdateDoc(tipdoc.ID, r)
+	resdoc, reserr, err := c.DB.UpdateDoc(tipdoc.ID, r)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -115,4 +117,29 @@ func (bc *BlockChain) AddBlock(data string) error {
 	}
 
 	return nil
+}
+
+// PrevDoc :
+func (c *Chain) PrevDoc(prevHash []byte) *Block {
+	docbyte, _, err := c.DB.GetDoc(hex.EncodeToString(prevHash))
+	if err != nil {
+		return nil
+	}
+	return DecodeJSONBlock(docbyte)
+}
+
+// AllBlock : return the array of all Block
+func (c *Chain) AllBlock() []Block {
+	var blkArr []Block
+	doc := c.PrevDoc(c.TipHash)
+	blkArr = append(blkArr, *doc)
+
+	for {
+		if hex.EncodeToString(doc.PrevHash) == "" {
+			break
+		}
+		doc = c.PrevDoc(doc.PrevHash)
+		blkArr = append(blkArr, *doc)
+	}
+	return blkArr
 }

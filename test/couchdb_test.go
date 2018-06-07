@@ -69,7 +69,7 @@ func TestCreateDB(t *testing.T) {
 
 func TestDeleteDB(t *testing.T) {
 	client := couchdb.NewCouchClient("zhuyx", "zhuyx123", url)
-	dbok, dberr, err := client.DeleteDB("block")
+	dbok, dberr, err := client.DeleteDB("blockchain")
 	if err != nil {
 		t.Fatal(err)
 	}

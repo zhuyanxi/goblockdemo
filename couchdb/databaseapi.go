@@ -44,7 +44,7 @@ func (cc *CouchClient) CreateDB(dbname string) (*ResponseOK, *ResponseError, err
 
 	var ok ResponseOK
 	var reserr ResponseError
-	log.Println(string(body))
+	log.Printf("CreateDB info: %s\n", string(body))
 	if res.StatusCode == 201 {
 		err = json.Unmarshal(body, &ok)
 	} else {

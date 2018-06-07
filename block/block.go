@@ -26,7 +26,7 @@ type BDoc struct {
 	ID      string `json:"_id"`
 	Rev     string `json:"_rev"`
 	Prev    string `json:"prev"`
-	Blkjson string `json:"blkjson"`
+	Blkjson string `json:"blkjson"` // The hex string of Block json []byte
 }
 
 // BTipDoc :
@@ -89,10 +89,22 @@ func (b *Block) ToJSONByte() []byte {
 	return jsonBlock
 }
 
+func decodeBDoc(b []byte) *BDoc {
+	var doc BDoc
+	err := json.Unmarshal(b, &doc)
+	if err != nil {
+		return nil
+	}
+	return &doc
+}
+
 // DecodeJSONBlock :
 func DecodeJSONBlock(d []byte) *Block {
+	doc := decodeBDoc(d)
+
 	var block Block
-	err := json.Unmarshal(d, &block)
+	blkjson, _ := hex.DecodeString(doc.Blkjson)
+	err := json.Unmarshal(blkjson, &block)
 	if err != nil {
 		log.Println(err)
 	}

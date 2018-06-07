@@ -61,7 +61,7 @@ func TestAddBlock(t *testing.T) {
 	log.Println(bc)
 	log.Println(hex.EncodeToString(bc.TipHash))
 
-	err := bc.AddBlock("The test data.")
+	err := bc.AddBlock("The Second block data.")
 	if err != nil {
 		t.Errorf("error add block: %s", err)
 	}
@@ -70,5 +70,30 @@ func TestAddBlock(t *testing.T) {
 	if height != bcNew.Height-1 {
 		t.Error(bc)
 		t.Error(bcNew)
+	}
+}
+
+func TestPrevDoc(t *testing.T) {
+	c := block.NewBlockChain("blockchain")
+	height := c.Height
+	log.Println(height)
+	log.Println(hex.EncodeToString(c.TipHash))
+
+	prev, _ := hex.DecodeString("0006cedcd17986875c9b28a4ed2c3e7f415d6e263e9bae13b1c9ed44663479cc")
+	doc := c.PrevDoc(prev)
+	if doc.Height != 0 {
+		t.Error(doc)
+	}
+}
+
+func TestAllBlock(t *testing.T) {
+	c := block.NewBlockChain("blockchain")
+	height := c.Height
+	log.Println(height)
+	log.Println(hex.EncodeToString(c.TipHash))
+
+	allblock := c.AllBlock()
+	if len(allblock) != 3 {
+		t.Error(allblock)
 	}
 }

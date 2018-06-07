@@ -3,7 +3,6 @@ package routes
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"log"
 
 	"github.com/kataras/iris"
 	"github.com/zhuyanxi/goblockdemo/block"
@@ -11,12 +10,11 @@ import (
 
 // Index :
 func Index(ctx iris.Context) {
-	bc := block.NewBlockChain("blockchain")
-	log.Println(bc)
-	var blkArr []block.Block
+	c := block.NewBlockChain("blockchain")
+	allblock := c.AllBlock()
 
 	ctx.View("index.html", iris.Map{
-		"blocks": blkArr,
+		"blocks": allblock,
 		"active": ctx.Path(),
 	})
 }
@@ -32,12 +30,10 @@ func Hash(ctx iris.Context) {
 
 // Block :
 func Block(ctx iris.Context) {
-	bc := block.NewBlockChain("blockchain")
-	bc.AddBlock("Send 1 btc to Alice")
-	var blkArr []block.Block
-
+	c := block.NewBlockChain("blockchain")
+	allblock := c.AllBlock()
 	ctx.View("block.html", iris.Map{
-		"block":  blkArr[1],
+		"block":  allblock[0],
 		"active": ctx.Path(),
 	})
 }
