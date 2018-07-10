@@ -10,6 +10,7 @@ import (
 
 //const dbName = "blockchain"
 const url = "http://127.0.0.1:5984"
+const geneCoinBaseData = "the genesis coin"
 
 // Chain :
 type Chain struct {
@@ -19,8 +20,8 @@ type Chain struct {
 }
 
 // newGenesisBlock :
-func newGenesisBlock() *Block {
-	return NewBlock(0, "The First Block", []byte{}) //6929, 22949
+func newGenesisBlock(basecoin *Transaction) *Block {
+	return NewBlock(0, []*Transaction{basecoin}, []byte{}) //6929, 22949
 }
 
 func getTipDoc(db couchdb.Database) *BTipDoc {
@@ -42,7 +43,7 @@ func getTipDoc(db couchdb.Database) *BTipDoc {
 // NewBlockChain : Create the BlockChain database
 // if the db is already exist, return the BlockChain entity;
 // if the db is not exist, create the database and add the tip_doc and the genesis doc
-func NewBlockChain(dbName string) *Chain {
+func NewBlockChain(dbName, address string) *Chain {
 	var tipHash []byte
 	var height int64
 
@@ -55,7 +56,8 @@ func NewBlockChain(dbName string) *Chain {
 
 	db := client.DBInstance(dbName)
 	if dbok.OK {
-		gene := newGenesisBlock()
+		trans := NewCoinBase(address, geneCoinBaseData)
+		gene := newGenesisBlock(trans)
 		db.NewDocument(gene.GenerateBlockMap())
 
 		tipHash = gene.Hash
@@ -87,8 +89,8 @@ func NewBlockChain(dbName string) *Chain {
 }
 
 // AddBlock :
-func (c *Chain) AddBlock(data string) error {
-	newBlock := NewBlock(c.Height+1, data, c.TipHash)
+func (c *Chain) AddBlock(transactions []*Transaction) error {
+	newBlock := NewBlock(c.Height+1, transactions, c.TipHash)
 
 	res, reserr, err := c.DB.NewDocument(newBlock.GenerateBlockMap())
 	if err != nil {

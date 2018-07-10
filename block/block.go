@@ -1,24 +1,21 @@
 package block
 
 import (
-	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"log"
 	"time"
-
-	Util "github.com/zhuyanxi/goblockdemo/util"
 )
 
 // Block :
 type Block struct {
-	Height    int64
-	Timestamp int64
-	Data      []byte
-	PrevHash  []byte
-	Hash      []byte
-	Nouce     int
+	Height       int64
+	Timestamp    int64
+	Transactions []*Transaction
+	PrevHash     []byte
+	Hash         []byte
+	Nouce        int
 }
 
 // BDoc : the doc
@@ -39,42 +36,44 @@ type BTipDoc struct {
 
 // SetHash :
 func (b *Block) SetHash() {
-	var headers []byte
-	timestamp := Util.IntToHex(b.Timestamp)
-	height := Util.IntToHex(b.Height)
-	nouce := Util.IntToHex(int64(b.Nouce))
-	difficult := Util.IntToHex(int64(DifficultyBits))
-	if b.Height == 0 {
-		headers = bytes.Join(
-			[][]byte{
-				b.PrevHash,
-				b.Data,
-				height,
-				difficult,
-				nouce,
-			},
-			[]byte{},
-		)
-	} else {
-		headers = bytes.Join(
-			[][]byte{
-				b.PrevHash,
-				b.Data,
-				timestamp,
-				height,
-				difficult,
-				nouce,
-			},
-			[]byte{},
-		)
-	}
+	//var headers []byte
+	// timestamp := Util.IntToHex(b.Timestamp)
+	// height := Util.IntToHex(b.Height)
+	// nouce := Util.IntToHex(int64(b.Nouce))
+	// difficult := Util.IntToHex(int64(DifficultyBits))
+	// transhash := b.GenerateTransactionHash()
+	// if b.Height == 0 {
+	// 	headers = bytes.Join(
+	// 		[][]byte{
+	// 			b.PrevHash,
+	// 			transhash,
+	// 			height,
+	// 			difficult,
+	// 			nouce,
+	// 		},
+	// 		[]byte{},
+	// 	)
+	// } else {
+	// 	headers = bytes.Join(
+	// 		[][]byte{
+	// 			b.PrevHash,
+	// 			transhash,
+	// 			timestamp,
+	// 			height,
+	// 			difficult,
+	// 			nouce,
+	// 		},
+	// 		[]byte{},
+	// 	)
+	// }
+	headers, _ := json.Marshal(b)
 	hash := sha256.Sum256(headers)
 	b.Hash = hash[:]
 }
 
 // NewBlock :
-func NewBlock(height int64, data string, prevBlockHash []byte) *Block {
-	block := &Block{height, time.Now().UnixNano(), []byte(data), prevBlockHash, []byte{}, 0}
+func NewBlock(height int64, transactions []*Transaction, prevBlockHash []byte) *Block {
+	block := &Block{height, time.Now().UnixNano(), transactions, prevBlockHash, []byte{}, 0}
 	pow := NewPOW(block)
 	nouce, hash := pow.Run()
 
@@ -119,4 +118,10 @@ func (b *Block) GenerateBlockMap() map[string]string {
 	r["prev"] = hex.EncodeToString(b.PrevHash)
 	r["blkjson"] = hex.EncodeToString(blkjson)
 	return r
+}
+
+// GenerateTransactionHash :
+func (b *Block) GenerateTransactionHash() []byte {
+	hash, _ := json.Marshal(b.Transactions)
+	return hash[:]
 }

@@ -1,12 +1,11 @@
 package block
 
 import (
-	"bytes"
 	"crypto/sha256"
+	"encoding/json"
+	"log"
 	"math"
 	"math/big"
-
-	Util "github.com/zhuyanxi/goblockdemo/util"
 )
 
 var (
@@ -14,7 +13,7 @@ var (
 )
 
 // DifficultyBits : define the hash string of data starts with how many 0 bits
-const DifficultyBits = 12
+const DifficultyBits = 16
 
 // ProofOfWork :
 type ProofOfWork struct {
@@ -33,32 +32,38 @@ func NewPOW(b *Block) *ProofOfWork {
 
 // PrepareData :
 func (pow *ProofOfWork) PrepareData(nouce int) []byte {
-	var data []byte
+	block := pow.block
+	block.Nouce = nouce
+	data, _ := json.Marshal(block)
 
-	if pow.block.Height == 0 {
-		data = bytes.Join(
-			[][]byte{
-				pow.block.PrevHash,
-				pow.block.Data,
-				Util.IntToHex(pow.block.Height),
-				Util.IntToHex(int64(DifficultyBits)),
-				Util.IntToHex(int64(nouce)),
-			},
-			[]byte{},
-		)
-	} else {
-		data = bytes.Join(
-			[][]byte{
-				pow.block.PrevHash,
-				pow.block.Data,
-				Util.IntToHex(pow.block.Timestamp),
-				Util.IntToHex(pow.block.Height),
-				Util.IntToHex(int64(DifficultyBits)),
-				Util.IntToHex(int64(nouce)),
-			},
-			[]byte{},
-		)
-	}
+	// var data []byte
+	// transhash := pow.block.GenerateTransactionHash()
+	// if pow.block.Height == 0 {
+	// 	data = bytes.Join(
+	// 		[][]byte{
+	// 			pow.block.PrevHash,
+	// 			transhash,
+	// 			Util.IntToHex(pow.block.Height),
+	// 			Util.IntToHex(int64(DifficultyBits)),
+	// 			Util.IntToHex(int64(nouce)),
+	// 		},
+	// 		[]byte{},
+	// 	)
+	// } else {
+	// 	data = bytes.Join(
+	// 		[][]byte{
+	// 			pow.block.PrevHash,
+	// 			transhash,
+	// 			Util.IntToHex(pow.block.Timestamp),
+	// 			Util.IntToHex(pow.block.Height),
+	// 			Util.IntToHex(int64(DifficultyBits)),
+	// 			Util.IntToHex(int64(nouce)),
+	// 		},
+	// 		[]byte{},
+	// 	)
+	// }
+	//log.Println(hex.EncodeToString(data))
+	//log.Println(data1)
 
 	return data
 }
@@ -78,7 +83,7 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 		if hashInt.Cmp(pow.target) == -1 {
 			break
 		} else {
-			//fmt.Println(nouce)
+			log.Println(nouce)
 			nouce++
 		}
 	}

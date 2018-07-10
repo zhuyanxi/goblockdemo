@@ -1,13 +1,9 @@
 package test
 
 import (
-	"encoding/hex"
-	"encoding/json"
 	"fmt"
-	"log"
 	"testing"
 
-	"github.com/zhuyanxi/goblockdemo/block"
 	"github.com/zhuyanxi/goblockdemo/couchdb"
 )
 
@@ -79,86 +75,63 @@ func TestDeleteDB(t *testing.T) {
 	}
 }
 
-func TestNewDocument(t *testing.T) {
-	//btt, _ := hex.DecodeString("0006cedcd17986875c9b28a4ed2c3e7f415d6e263e9bae13b1c9ed44663479cc")
-	btt := []byte{}
-	blk := block.NewBlock(0, "The Second Block", btt)
-	blkdb := blk.GenerateBlockMap()
+// func TestNewDocument(t *testing.T) {
+// 	//btt, _ := hex.DecodeString("0006cedcd17986875c9b28a4ed2c3e7f415d6e263e9bae13b1c9ed44663479cc")
+// 	btt := []byte{}
+// 	blk := block.NewBlock(0, "The Second Block", btt)
+// 	blkdb := blk.GenerateBlockMap()
 
-	// blkdb := make(map[string]string)
-	// blkdb["_id"] = "tiphash"
-	// blkdb["tiphash"] = "0006cedcd17986875c9b28a4ed2c3e7f415d6e263e9bae13b1c9ed44663479cc"
+// 	// blkdb := make(map[string]string)
+// 	// blkdb["_id"] = "tiphash"
+// 	// blkdb["tiphash"] = "0006cedcd17986875c9b28a4ed2c3e7f415d6e263e9bae13b1c9ed44663479cc"
 
-	client := couchdb.NewCouchClient("zhuyx", "zhuyx123", url)
-	db := client.DBInstance("block")
-	res, reserr, err := db.NewDocument(blkdb)
-	log.Println(res.ID)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !res.OK {
-		t.Errorf("error dbinfo: %s", res.ID)
-		t.Errorf("error dbinfo: %s", reserr.Error)
-	}
-}
+// 	client := couchdb.NewCouchClient("zhuyx", "zhuyx123", url)
+// 	db := client.DBInstance("block")
+// 	res, reserr, err := db.NewDocument(blkdb)
+// 	log.Println(res.ID)
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+// 	if !res.OK {
+// 		t.Errorf("error dbinfo: %s", res.ID)
+// 		t.Errorf("error dbinfo: %s", reserr.Error)
+// 	}
+// }
 
-func TestGetAllDocsByKeys(t *testing.T) {
-	keys := []string{"0006cedcd17986875c9b28a4ed2c3e7f415d6e263e9bae13b1c9ed44663479cc"}
+// func TestGetAllDocsByKeys(t *testing.T) {
+// 	keys := []string{"0006cedcd17986875c9b28a4ed2c3e7f415d6e263e9bae13b1c9ed44663479cc"}
 
-	client := couchdb.NewCouchClient("zhuyx", "zhuyx123", url)
-	db := client.DBInstance("block")
-	docs, err := db.GetAllDocsByKeys(keys)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if docs.TotalRows != 4 {
-		t.Errorf("error dbinfo: %s", docs.Rows[0].Doc)
-	}
-}
+// 	client := couchdb.NewCouchClient("zhuyx", "zhuyx123", url)
+// 	db := client.DBInstance("block")
+// 	docs, err := db.GetAllDocsByKeys(keys)
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+// 	if docs.TotalRows != 4 {
+// 		t.Errorf("error dbinfo: %s", docs.Rows[0].Doc)
+// 	}
+// }
 
-func TestGetDoc(t *testing.T) {
-	key := "0008df6a7572496ea3d34afd5a30d75bcd0ca7043ed55903927321a5291c0a0f"
-	client := couchdb.NewCouchClient("zhuyx", "zhuyx123", url)
-	db := client.DBInstance("block")
-	docjson, reserr, err := db.GetDoc(key)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	var doc block.BDoc
-	err = json.Unmarshal(docjson, &doc)
-
-	// log.Println(doc.ID)
-	// log.Println(doc.Blkjson)
-	data, _ := hex.DecodeString(doc.Blkjson)
-	log.Println(data)
-	log.Println(string(data))
-
-	if doc.ID != key {
-		t.Errorf("error dbinfo: %s", doc.Blkjson)
-		t.Errorf("error info: %s", reserr.Error)
-	}
-}
-
-// func TestUpdateDoc(t *testing.T) {
-// 	key := "0004d003fe2306112dba354ed28a3c6924572928d395471f417d36b89a7a365c"
+// func TestGetDoc(t *testing.T) {
+// 	key := "0008df6a7572496ea3d34afd5a30d75bcd0ca7043ed55903927321a5291c0a0f"
 // 	client := couchdb.NewCouchClient("zhuyx", "zhuyx123", url)
 // 	db := client.DBInstance("block")
 // 	docjson, reserr, err := db.GetDoc(key)
 // 	if err != nil {
 // 		t.Fatal(err)
 // 	}
+
 // 	var doc block.BDoc
 // 	err = json.Unmarshal(docjson, &doc)
+
+// 	// log.Println(doc.ID)
+// 	// log.Println(doc.Blkjson)
+// 	data, _ := hex.DecodeString(doc.Blkjson)
+// 	log.Println(data)
+// 	log.Println(string(data))
+
 // 	if doc.ID != key {
 // 		t.Errorf("error dbinfo: %s", doc.Blkjson)
 // 		t.Errorf("error info: %s", reserr.Error)
 // 	}
-
-// 	var block block.Block
-// 	err = json.Unmarshal([]byte(doc.Blkjson), &block)
-
-// 	payload := make(map[string]string)
-// 	payload["_rev"] = doc.Rev
-// 	//doc, reserr, err := db.UpdateDoc(key)
 // }
