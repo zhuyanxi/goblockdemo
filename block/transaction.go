@@ -56,3 +56,13 @@ func NewCoinBase(to, data string) *Transaction {
 	tx.SetID()
 	return &tx
 }
+
+// CanUnlockOutputWith :
+func (in *TXInput) CanUnlockOutputWith(unlockingData string) bool {
+	return in.ScriptSig == unlockingData
+}
+
+// CanBeUnlockedWith :
+func (out *TXOutput) CanBeUnlockedWith(unlockingData string) bool {
+	return out.ScriptPubKey == unlockingData
+}

@@ -13,7 +13,7 @@ import (
 
 func TestNewBlockChain(t *testing.T) {
 	t1 := time.Now()
-	bc := block.NewBlockChain("blockchain", "0006cedcd17986875c9b28a4ed2c3e7f415d6e263e9bae13b1c9ed44663479cc")
+	bc := block.NewBlockChain("blockchain", "39ZVV99CGTUnWHGuCNqGxb4EAeqTV1S92n")
 	elapsed := time.Since(t1)
 	log.Println("Execute time: ", elapsed)
 	log.Println(bc)
@@ -25,7 +25,7 @@ func TestNewBlockChain(t *testing.T) {
 }
 
 func TestGetFirstBlock(t *testing.T) {
-	key := "00021fd2828bcc2b494a4bc260a5110d11a8eef1f4e523a7f47e90578c3f53c9"
+	key := "000018f5fa26b88c1b4d7beeab7e4dfd0476e5f26ea43cf2c16c081832eb19e9"
 	client := couchdb.NewCouchClient("zhuyx", "zhuyx123", url)
 	db := client.DBInstance("blockchain")
 	docjson, reserr, err := db.GetDoc(key)
@@ -53,14 +53,19 @@ func TestGetFirstBlock(t *testing.T) {
 	bdata := blk.Transactions
 	log.Println(bdata)
 	vin := bdata[0].Vin[0]
+	vout := bdata[0].Vout[0]
 	log.Println(vin)
+	log.Println(vout)
 	if vin.ScriptSig != "the genesis coin" {
 		t.Errorf("error info: %s", vin.ScriptSig)
+	}
+	if vout.ScriptPubKey != "39ZVV99CGTUnWHGuCNqGxb4EAeqTV1S92n" {
+		t.Errorf("error info: %s", vout.ScriptPubKey)
 	}
 }
 
 // func TestAddBlock(t *testing.T) {
-// 	bc := block.NewBlockChain("blockchain")
+// 	bc := block.NewBlockChain("blockchain", "")
 // 	height := bc.Height
 // 	log.Println(bc)
 // 	log.Println(hex.EncodeToString(bc.TipHash))

@@ -41,7 +41,7 @@ func getTipDoc(db couchdb.Database) *BTipDoc {
 }
 
 // NewBlockChain : Create the BlockChain database
-// if the db is already exist, return the BlockChain entity;
+// if the db is already exist, return the Chain entity;
 // if the db is not exist, create the database and add the tip_doc and the genesis doc
 func NewBlockChain(dbName, address string) *Chain {
 	var tipHash []byte
