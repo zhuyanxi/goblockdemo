@@ -64,6 +64,16 @@ func TestGetFirstBlock(t *testing.T) {
 	}
 }
 
+func TestSetTransactionID(t *testing.T) {
+	address := "39ZVV99CGTUnWHGuCNqGxb4EAeqTV1S92n"
+	geneCoinBaseData := "the genesis coin"
+	trans := block.NewCoinBase(address, geneCoinBaseData)
+
+	if string(trans.ID) == "123" {
+		t.Errorf("error info: %x", trans.ID)
+	}
+}
+
 // func TestAddBlock(t *testing.T) {
 // 	bc := block.NewBlockChain("blockchain", "")
 // 	height := bc.Height

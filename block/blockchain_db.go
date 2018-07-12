@@ -145,3 +145,45 @@ func (c *Chain) AllBlock() []Block {
 	}
 	return blkArr
 }
+
+// FindUTXO :
+func (c *Chain) FindUTXO(address string) []Transaction {
+	var unspentTXs []Transaction
+	spentTXs := make(map[string][]int)
+	bc := c.AllBlock()
+	for _, block := range bc {
+		for _, tx := range block.Transactions {
+			txID := hex.EncodeToString(tx.ID)
+		Outputs:
+			for outIdx, out := range tx.Vout {
+				// Was the output spent?
+				if spentTXs[txID] != nil {
+					for _, spentOut := range spentTXs[txID] {
+						if spentOut == outIdx {
+							continue Outputs
+						}
+					}
+				}
+
+				if out.CanBeUnlockedWith(address) {
+					unspentTXs = append(unspentTXs, *tx)
+				}
+			}
+
+			if tx.IsCoinbase() == false {
+				for _, in := range tx.Vin {
+					if in.CanUnlockOutputWith(address) {
+						inTxID := hex.EncodeToString(in.Txid)
+						spentTXs[inTxID] = append(spentTXs[inTxID], in.Vout)
+					}
+				}
+			}
+		}
+
+		// if len(block.PrevHash) == 0 {
+		// 	break
+		// }
+	}
+
+	return unspentTXs
+}

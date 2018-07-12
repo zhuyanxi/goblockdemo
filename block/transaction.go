@@ -30,6 +30,11 @@ type TXOutput struct {
 	ScriptPubKey string
 }
 
+// IsCoinbase checks whether the transaction is coinbase
+func (tx Transaction) IsCoinbase() bool {
+	return len(tx.Vin) == 1 && len(tx.Vin[0].Txid) == 0 && tx.Vin[0].Vout == -1
+}
+
 // SetID : set the id of transaction
 func (tx *Transaction) SetID() {
 	var encoded bytes.Buffer
