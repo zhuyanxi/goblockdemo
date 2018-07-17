@@ -146,8 +146,8 @@ func (c *Chain) AllBlock() []Block {
 	return blkArr
 }
 
-// FindUTXO :
-func (c *Chain) FindUTXO(address string) []Transaction {
+// FindUTX : find and return a list of unspent transactions
+func (c *Chain) FindUTX(address string) []Transaction {
 	var unspentTXs []Transaction
 	spentTXs := make(map[string][]int)
 	bc := c.AllBlock()
@@ -186,4 +186,18 @@ func (c *Chain) FindUTXO(address string) []Transaction {
 	}
 
 	return unspentTXs
+}
+
+// FindUTXO : find and return the list of unspent transaction outputs
+func (c *Chain) FindUTXO(address string) []TXOutput {
+	var UTXOs []TXOutput
+	unspentTXs := c.FindUTX(address)
+	for _, tx := range unspentTXs {
+		for _, out := range tx.Vout {
+			if out.CanBeUnlockedWith(address) {
+				UTXOs = append(UTXOs, out)
+			}
+		}
+	}
+	return UTXOs
 }

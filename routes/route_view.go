@@ -10,7 +10,7 @@ import (
 
 // Index :
 func Index(ctx iris.Context) {
-	c := block.NewBlockChain("blockchain")
+	c := block.NewBlockChain("blockchain", "")
 	allblock := c.AllBlock()
 
 	ctx.View("index.html", iris.Map{
@@ -30,7 +30,7 @@ func Hash(ctx iris.Context) {
 
 // Block :
 func Block(ctx iris.Context) {
-	c := block.NewBlockChain("blockchain")
+	c := block.NewBlockChain("blockchain", "")
 	allblock := c.AllBlock()
 	ctx.View("block.html", iris.Map{
 		"block":  allblock[0],
